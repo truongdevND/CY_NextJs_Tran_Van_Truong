@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import DialogNotification from '../../components/DialogNotification';
-import InputForm from '../components/InputForm';
+import InputForm from '../../components/InputForm';
 import Link from 'next/link';
 import { signup } from '../service/auth';
 
@@ -14,7 +14,7 @@ function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-        await signup(name,email,password)
+      await signup(name, email, password)
       console.log('Signup successful:', { name, email, password });
     } catch (error) {
       console.error('Signup failed:', error);

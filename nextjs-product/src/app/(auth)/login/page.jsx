@@ -3,10 +3,10 @@ import DialogNotification from '@/app/components/DialogNotification';
 import { login } from '../service/auth';
 import { useState } from 'react';
 import Link from 'next/link';
-import InputForm from '../components/InputForm';
+import InputForm from '../../components/InputForm';
 import notificationStore from '@/stores/notificationStore';
 import { setCookie } from 'cookies-next';
-import {useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
 
 
 
@@ -20,7 +20,7 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
       const response = await login(email, password);
       if (response?.data?.token) {
@@ -44,7 +44,7 @@ function Login() {
       });
     }
   };
-  
+
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-b from-gray-50 to-gray-400">
