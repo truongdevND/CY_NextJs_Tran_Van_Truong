@@ -9,7 +9,6 @@ export const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(async (config) => {
     let cookieValue =await useUtils().getCookie("token");
-    console.log("TOKEN", cookieValue);
     if (cookieValue) {
         config.headers['Authorization'] = `Bearer ${cookieValue}`;
     }

@@ -4,8 +4,6 @@ import notificationStore from '@/stores/notificationStore';
 function DialogNotification() {
     const { textMess, title, urlImg, openDialog, closeDialog } = notificationStore();
 
-  
-
     return (
         <div>
             {openDialog && (

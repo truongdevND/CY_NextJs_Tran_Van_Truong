@@ -27,7 +27,7 @@ function Login() {
         await setCookie('token', response.data.token, {
           maxAge: 60 * 60 * 24 * 7,
         });
-        await router.push('/')
+        await router.push('/home')
       } else {
         await setNotification({
           text: 'Login failed. Please check your credentials.',
