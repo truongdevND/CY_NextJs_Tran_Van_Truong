@@ -1,6 +1,6 @@
 
 import ItemProduct from './components/ItemProduct'
-import { getProductsbyFilter } from '../service/products'
+import { getProductsbyFilter } from './service/products'
 
 export default async function ProductPage() {
   let products = await getProductsbyFilter()

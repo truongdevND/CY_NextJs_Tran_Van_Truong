@@ -1,31 +1,9 @@
 'use client';
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import DefaultLayout from '../layouts/DefaultLayout';
-import { getProducts } from '../(product)/service/products';
-
-
-
-const carouselData = [
-    {
-        id: 1,
-        title: "Stripy Zig Zag Jigsaw Pillow and Duvet Set",
-        image: "/api/placeholder/1600/800",
-    },
-    {
-        id: 2,
-        title: "Real Bamboo Wall Clock",
-        image: "/api/placeholder/1600/800",
-    },
-    {
-        id: 3,
-        title: "Brown and blue hardbound book",
-        image: "/api/placeholder/1600/800",
-    }
-];
-
-
+import { getProducts } from '../(product)/products/service/products';
+import formatMoney from '@/utils/formatMoney';
 
 export default function HomePage() {
     const [products, setProducts] = useState([]);
@@ -33,49 +11,46 @@ export default function HomePage() {
 
     useEffect(() => {
         const fetchProducts = async () => {
-          try {
-            const response = await getProducts();
-            console.log(response.data);
-            setProducts(response.data.data);
-          } catch (e) {
-            console.error("Error fetching products:", e);
-          }
+            try {
+                const response = await getProducts();
+                setProducts(response.data.data);
+            } catch (e) {
+                console.error("Error fetching products:", e);
+            }
         };
-    
-        fetchProducts(); 
-      }, []);
+
+        fetchProducts();
+    }, []);
 
     const nextSlide = () => {
-        setActiveSlide((prev) => (prev + 1) % carouselData.length);
+        setActiveSlide((prev) => (prev + 1) % products.length);
     };
 
     const prevSlide = () => {
-        setActiveSlide((prev) => (prev - 1 + carouselData.length) % carouselData.length);
+        setActiveSlide((prev) => (prev - 1 + products.length) % products.length);
     };
 
     return (
         <DefaultLayout>
             <main>
-                <div className="relative container mx-auto max-w-7xl">
+                <div className="relative container mx-auto max-w-full">
                     <div className="relative overflow-hidden h-[50vh]">
-                        {carouselData.map((slide, index) => (
+                        {products.map((slide, index) => (
                             <div
                                 key={slide.id}
                                 className={`absolute w-full h-full transition-opacity duration-500 ${index === activeSlide ? 'opacity-100' : 'opacity-0'
                                     }`}
                             >
                                 <div className="relative h-full w-full">
-                                    <Image
-                                        src={slide.image}
-                                        alt={slide.title}
-                                        fill
-                                        className="object-cover"
-                                        priority={index === 0}
+                                    <img
+                                        src={slide.preview_img_path}
+                                        alt={slide.name}
+                                        className="object-cover w-full h-full"
                                     />
                                     <div className="absolute inset-0 bg-black/20">
                                         <div className="container mx-auto h-full flex items-center">
                                             <div className="w-full lg:w-1/2 px-6 md:ml-16">
-                                                <p className="text-white text-2xl my-4">{slide.title}</p>
+                                                <p className="text-white text-2xl my-4">{slide.name}</p>
                                                 <Link
                                                     href="#"
                                                     className="text-xl inline-block text-white border-b border-white hover:border-gray-300 transition-colors"
@@ -104,7 +79,7 @@ export default function HomePage() {
                     </button>
 
                     <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
-                        {carouselData.map((_, index) => (
+                        {products.map((_, index) => (
                             <button
                                 key={index}
                                 onClick={() => setActiveSlide(index)}
@@ -137,7 +112,7 @@ export default function HomePage() {
                                             <img
                                                 src={product.preview_img_path}
                                                 alt={product.name}
-                                               
+
                                                 className="object-cover group-hover:scale-105 transition-transform duration-300"
                                             />
                                         </div>
@@ -149,7 +124,7 @@ export default function HomePage() {
                                                 </svg>
                                             </button>
                                         </div>
-                                        <p className="text-gray-900 mt-1">£{product.price}</p>
+                                        <p className="text-gray-900 mt-1">{formatMoney(product.price)}</p>
                                     </Link>
                                 </div>
                             ))}

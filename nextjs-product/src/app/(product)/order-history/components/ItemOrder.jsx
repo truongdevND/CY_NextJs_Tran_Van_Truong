@@ -4,84 +4,45 @@ import formatMoney from '@/utils/formatMoney';
 
 function ItemOrder(itemOrder) {
   return (
-    <div>
-      <div className="mt-6 border border-gray-900 pt-5">
-        <div className="flex max-md:flex-col items-center justify-between px-3 md:px-11">
-          <div className="flex justify-between w-full">
-            <div>
-              <p className="font-medium text-lg leading-8 text-black whitespace-nowrap">
-                Order ID: #{itemOrder.id}
-              </p>
-              <p className="font-medium text-lg leading-8 text-black whitespace-nowrap">
-                {formatDate(itemOrder.created_at)}
-              </p>
-            </div>
-            <div>
-              <p className="font-medium text-lg leading-8 text-black whitespace-nowrap">
-                Address: {itemOrder.address}
-              </p>
-              <p className="font-medium text-lg leading-8 text-black whitespace-nowrap">
-                Phone: {itemOrder.phone}
-              </p>
-            </div>
-          </div>
+    <div className="mt-6 border border-gray-300 rounded-lg shadow-sm p-6 bg-white">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+        <div>
+          <h2 className="text-lg font-semibold text-gray-800">
+            Order ID: <span className="text-indigo-600">#{itemOrder.id}</span>
+          </h2>
+          <p className="text-sm text-gray-500">{formatDate(itemOrder.created_at)}</p>
         </div>
-
-        <svg
-          className="my-6 w-full"
-          xmlns="http://www.w3.org/2000/svg"
-          width="1216"
-          height="2"
-          viewBox="0 0 1216 2"
-          fill="none"
-        >
-          <path d="M0 1H1216" stroke="#D1D5DB" />
-        </svg>
-
-        {itemOrder.order_items.map((item) => (
-          <div key={item.id}>
-            <div className="flex max-lg:flex-col items-center justify-between px-3">
-              <div className="w-full">
-                <div className="col-span-4 sm:col-span-3 max-sm:mt-4 sm:pl-8 flex flex-col justify-center max-sm:items-center">
-                  <h6 className="font-manrope font-semibold text-2xl leading-9 text-black mb-3 whitespace-nowrap">
-                    {item.name}
-                  </h6>
-                  <div className="flex items-center max-sm:flex-col gap-x-10 gap-y-3">
-                    <span className="font-normal text-lg leading-8 text-gray-500 whitespace-nowrap">
-                      Qty: {item.quantity}
-                    </span>
-                    <p className="font-semibold text-xl leading-8 text-black whitespace-nowrap">
-                      Price: {formatMoney(item.price)}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <svg
-              className="mt-9 w-full"
-              xmlns="http://www.w3.org/2000/svg"
-              width="1216"
-              height="2"
-              viewBox="0 0 1216 2"
-              fill="none"
-            >
-              <path d="M0 1H1216" stroke="#D1D5DB" />
-            </svg>
-          </div>
-        ))}
-
-        <div className="px-3 md:px-11 flex items-center justify-between max-sm:flex-col-reverse">
-          <div className="flex h-[60px] max-sm:flex-col-reverse items-center">
-            <p className="font-normal text-xl leading-8 text-gray-500 sm:pl-8">
-              Payment Is Successful
-            </p>
-          </div>
-          <p className="font-medium text-xl leading-8 text-black max-sm:py-4">
-            <span className="text-gray-500">Total Price: </span>
-            {formatMoney(itemOrder.sub_total)}
+        <div className="mt-4 md:mt-0 text-sm">
+          <p className="text-gray-700">
+            <span className="font-medium">Address:</span> {itemOrder.address}
+          </p>
+          <p className="text-gray-700">
+            <span className="font-medium">Phone:</span> {itemOrder.phone}
           </p>
         </div>
+      </div>
+
+      <div className="border-t border-gray-200 my-4"></div>
+
+      {itemOrder.order_items.map((item) => (
+        <div key={item.id} className="py-4">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+            <h3 className="font-semibold text-gray-800">{item.name}</h3>
+            <div className="mt-2 md:mt-0 flex flex-col md:flex-row items-start md:items-center gap-4">
+              <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
+              <p className="font-semibold text-gray-800">{formatMoney(item.price)}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+
+      <div className="border-t border-gray-200 my-4"></div>
+
+      <div className="flex flex-col md:flex-row justify-between items-center">
+        <p className="text-sm text-green-600">Payment Is Successful</p>
+        <p className="font-medium text-gray-800">
+          <span className="text-gray-500">Total Price:</span> {formatMoney(itemOrder.sub_total)}
+        </p>
       </div>
     </div>
   );

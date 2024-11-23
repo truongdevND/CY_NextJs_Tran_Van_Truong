@@ -1,7 +1,7 @@
 
 import {NextResponse} from 'next/server'
 import {getCookie} from "cookies-next";
- ``
+ 
 export async function middleware(request) {
     const token = await getCookie('token', { req: request });
     if (token) {
@@ -11,5 +11,5 @@ export async function middleware(request) {
 }
 
 export const config = {
-    matcher: ['/cart', '/checkout', '/orders', '/products/:path*'],
+    matcher: ['/cart','/home', '/order-history', '/orders', '/products/:path*'],
 }

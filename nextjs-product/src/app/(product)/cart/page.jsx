@@ -19,7 +19,7 @@ function Cart() {
           <div className="grid lg:grid-cols-3 gap-4 max-lg:max-w-3xl mx-auto">
             <div className="lg:col-span-2 bg-white divide-y divide-gray-300 px-4">
               {cartList.length === 0 ? (
-                <p className="text-center text-gray-500 py-4">Giỏ hàng trống</p>
+                <p className="text-center text-gray-600 py-4 uppercase">Cart is empty!!!!!!!</p>
               ) : (
                 <div className="max-h-[550px] p-3 overflow-y-auto">
                   {cartList.map(cart => (  
