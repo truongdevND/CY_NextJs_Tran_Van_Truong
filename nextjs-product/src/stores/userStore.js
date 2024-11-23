@@ -1,15 +1,19 @@
 import { create } from 'zustand';
+import { persist } from "zustand/middleware";
 
-const userName = create((set) => ({
-  userName: '',
- 
+const useUserStore = create(
+  persist(
+    (set) => ({
+      userName: '',
+      setUserStore: (userName) =>
+        set(() => ({
+          userName,
+        })),
+    }),
+    {
+      name: 'user', 
+    }
+  )
+);
 
-  setNotification: ({ text }) =>
-    set(() => ({
-      userName: text,
-     
-    })),
-
-}));
-
-export default userName;
+export default useUserStore;

@@ -2,7 +2,7 @@ import React from 'react';
 import notificationStore from '@/stores/notificationStore';
 
 function DialogNotification() {
-    const { textMess, title, urlImg, openDialog, closeDialog } = notificationStore();
+    const { textMess, title, urlImg, openDialog, closeDialog, textBtn } = notificationStore();
 
     return (
         <div>
@@ -36,9 +36,12 @@ function DialogNotification() {
                                     <button
                                         onClick={closeDialog}
                                         type="button"
-                                        className="mt-3 inline-flex w-full justify-center rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-red-400"
+                                        className={`mt-3 inline-flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold text-white
+                                         shadow-sm ring-1 ring-inset ring-gray-300 ${textBtn =='OK'
+                                          ? "bg-blue-500 hover:bg-blue-400"
+                                          : "bg-red-500 hover:bg-red-400"}`}
                                     >
-                                        Close
+                                        {textBtn}
                                     </button>
                                 </div>
                             </div>

@@ -1,15 +1,28 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
+import useCartStore from '@/stores/cartStore';
+import useUserStore from '@/stores/userStore';
+import { logout } from '@/app/(auth)/service/auth';
+import { useRouter } from "next/navigation";
+import Cookies from 'js-cookie';
 
 function Header() {
   const [menuResponsive, setMenuResponsive] = useState(false);
   const [profile, setProfile] = useState(false);
+  const router = useRouter();
 
-  const storedUser = { username: 'JohnDoe' }; 
-  const cartList = [];
+  const cartList = useCartStore((state) => state.cartList); 
+  const userName = useUserStore((state) => state.userName); 
 
-  const handleLogout = () => {
-    console.log("Logging out...");
+  const handleLogout = async () => {
+    try {
+      await logout(); 
+      localStorage.clear(); 
+      Cookies.remove('token');
+      router.push('/'); 
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
 
   return (
@@ -49,7 +62,7 @@ function Header() {
                   {profile && (
                     <div className="bg-white z-20 shadow-lg py-6 px-6 sm:min-w-[320px] max-sm:min-w-[250px] max-sm:-right-32 absolute right-0 top-14">
                       <h6 className="font-semibold text-sm">Welcome</h6>
-                      <p className="text-sm text-gray-500 mt-1">{storedUser.username}</p>
+                      <p className="text-sm text-gray-500 mt-1">{userName}</p>
                       <hr className="border-b-0 my-4" />
                       <button type="button" onClick={handleLogout} className="bg-transparent border border-gray-300 hover:border-pink-500 px-4 py-2 mt-4 text-sm text-pink-500 font-semibold">
                         LOGOUT

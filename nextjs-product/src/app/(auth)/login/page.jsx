@@ -7,6 +7,7 @@ import InputForm from '../../components/InputForm';
 import notificationStore from '@/stores/notificationStore';
 import { setCookie } from 'cookies-next';
 import { useRouter } from "next/navigation";
+import userStore from '@/stores/userStore';
 
 
 
@@ -16,6 +17,8 @@ function Login() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const { setNotification } = notificationStore();
+  const setUserStore = userStore((state) => state.setUserStore);
+
 
 
   const handleSubmit = async (e) => {
@@ -23,16 +26,19 @@ function Login() {
 
     try {
       const response = await login(email, password);
+
       if (response?.data?.token) {
         await setCookie('token', response.data.token, {
           maxAge: 60 * 60 * 24 * 7,
         });
-        await router.push('/home')
+        router.push('/home')
+        setUserStore(response.data.user.name);
       } else {
         await setNotification({
           text: 'Login failed. Please check your credentials.',
           title: 'Error',
           imgUrl: 'https://media.istockphoto.com/id/1407160246/vector/danger-triangle-icon.jpg?s=612x612&w=0&k=20&c=BS5mwULONmoEG9qPnpAxjb6zhVzHYBNOYsc7S5vdzYI=',
+          textBtn: 'Cancel'
         });
       }
     } catch (error) {
@@ -41,6 +47,7 @@ function Login() {
         text: error.response?.data?.message || 'An error occurred while logging in.',
         title: 'Error',
         imgUrl: 'https://media.istockphoto.com/id/1407160246/vector/danger-triangle-icon.jpg?s=612x612&w=0&k=20&c=BS5mwULONmoEG9qPnpAxjb6zhVzHYBNOYsc7S5vdzYI=',
+        textBtn: 'Cancel'
       });
     }
   };

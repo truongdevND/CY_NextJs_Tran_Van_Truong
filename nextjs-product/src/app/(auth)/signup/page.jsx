@@ -4,20 +4,31 @@ import DialogNotification from '../../components/DialogNotification';
 import InputForm from '../../components/InputForm';
 import Link from 'next/link';
 import { signup } from '../service/auth';
+import notificationStore from '@/stores/notificationStore';
+import { useRouter } from "next/navigation";
 
 function Signup() {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const { setNotification } = notificationStore();
+  const router = useRouter()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await signup(name, email, password)
-      console.log('Signup successful:', { name, email, password });
+      await signup(name, email, password);
+      router.push('/login')
+
     } catch (error) {
       console.error('Signup failed:', error);
+      await setNotification({
+        text: error.response?.data?.message || 'An error occurred while logging in.',
+        title: 'Error',
+        imgUrl: 'https://media.istockphoto.com/id/1407160246/vector/danger-triangle-icon.jpg?s=612x612&w=0&k=20&c=BS5mwULONmoEG9qPnpAxjb6zhVzHYBNOYsc7S5vdzYI=',
+        textBtn: 'Cancel'
+      });
     }
   };
 

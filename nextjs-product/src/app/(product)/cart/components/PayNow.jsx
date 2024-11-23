@@ -1,24 +1,29 @@
-
-import React, {  useState } from 'react'
+'use client'
+import React, { useState } from 'react'
 import useCartStore from '@/stores/cartStore'
 import formatMoney from '@/utils/formatMoney';
 import InputForm from '@/app/components/InputForm';
-import { order } from '../service/order';
 import notificationStore from '@/stores/notificationStore';
+import DialogNotification from '@/app/components/DialogNotification';
+import { order } from '../service/order';
+import { useRouter } from "next/navigation";
+
 
 function PayNow() {
     const [phone, setPhone] = useState('');
     const [address, setAddress] = useState('');
-    const { cartList, totalPrice } = useCartStore();
+    const { cartList, totalPrice, clearCart } = useCartStore();
     const { setNotification } = notificationStore();
+    const router = useRouter()
+
 
 
     const itemOrder = () => {
-        if (useCartStore.cartList.length === 0) return null;
+        if (cartList.length === 0) return null;
         return {
             address: address,
             phone: phone,
-            cart_item: useCartStore.cartList.map((item) => ({
+            cart_item:cartList.map((item) => ({
                 product_id: item.id,
                 quantity: item.quantity,
                 price: item.price,
@@ -32,6 +37,7 @@ function PayNow() {
                 text: '"Please fill in all required fields',
                 title: 'WARNING!!!!',
                 imgUrl: 'https://media.istockphoto.com/id/1407160246/vector/danger-triangle-icon.jpg?s=612x612&w=0&k=20&c=BS5mwULONmoEG9qPnpAxjb6zhVzHYBNOYsc7S5vdzYI=',
+                textBtn:'Cancel'
             });
             return false;
         }
@@ -40,10 +46,10 @@ function PayNow() {
                 text: '"Please fill in all required fields',
                 title: 'WARNING!!!!',
                 imgUrl: 'https://media.istockphoto.com/id/1407160246/vector/danger-triangle-icon.jpg?s=612x612&w=0&k=20&c=BS5mwULONmoEG9qPnpAxjb6zhVzHYBNOYsc7S5vdzYI=',
+                textBtn:'Cancel'
             });
             return false;
         }
-        setError('');
         return true;
     };
     const handleSubmit = async (e) => {
@@ -51,24 +57,36 @@ function PayNow() {
         if (!validateInput()) return;
 
         const orderData = itemOrder();
+
         if (!orderData) {
-            setError('Your cart is empty.');
+            setNotification({
+                text: '"Please fill in all required fields',
+                title: 'WARNING!!!!',
+                imgUrl: 'https://media.istockphoto.com/id/1407160246/vector/danger-triangle-icon.jpg?s=612x612&w=0&k=20&c=BS5mwULONmoEG9qPnpAxjb6zhVzHYBNOYsc7S5vdzYI=',
+                textBtn:'Cancel'
+            });
+            
             return;
         }
 
         try {
             await order(orderData.address, orderData.phone, orderData.cart_item);
-            await setNotification({
+            clearCart()
+            setNotification({
                 text: 'Your order has been placed successfully',
                 title: 'Successful',
                 imgUrl: 'https://static-00.iconduck.com/assets.00/success-icon-512x512-qdg1isa0.png',
+                textBtn:'OK'
             });
+            router.push('/order-history')
+
 
         } catch (error) {
             setNotification({
                 text: '"Please fill in all required fields',
                 title: 'ERROR!!!!',
                 imgUrl: 'https://media.istockphoto.com/id/1407160246/vector/danger-triangle-icon.jpg?s=612x612&w=0&k=20&c=BS5mwULONmoEG9qPnpAxjb6zhVzHYBNOYsc7S5vdzYI=',
+                textBtn:'Cancel'
             });
         }
     };
@@ -96,24 +114,24 @@ function PayNow() {
                                 type="text"
                                 placeholder="Address..." />
                         </div>
-                        <button type="button" 
-
+                        <button type="button"
+                            onClick={handleSubmit}
                             className={`w-full flex items-center justify-center rounded-md px-5 py-2.5 text-center text-sm font-medium text-white ${cartList.length > 0
                                 ? "bg-blue-600 hover:bg-blue-700 focus:ring-blue-300"
                                 : "bg-gray-400 cursor-not-allowed"
                                 } focus:outline-none focus:ring-4 transition-all duration-200`}
-                            disabled={cartList.length > 0}
+                            disabled={cartList.length <= 0}
                         >
                             Pay Now
                         </button>
-                        {/* <DialogNotification /> */}
+                        <DialogNotification />
                     </form>
                     <div className="mt-6 w-full grow sm:mt-8 lg:mt-0">
                         <div className="space-y-4 rounded-lg border border-gray-100 bg-gray-50 p-6">
                             <div className="flex items-center justify-between gap-4 border-t border-gray-200 pt-2">
                                 <div className="text-base font-bold text-gray-900">Total</div>
                                 <div className="text-base font-bold text-gray-900">
-                                    {formatMoney(totalPrice())}
+                                   {formatMoney(totalPrice())} 
                                 </div>
                             </div>
                         </div>
@@ -126,3 +144,6 @@ function PayNow() {
 }
 
 export default PayNow
+
+
+

@@ -4,7 +4,7 @@ export const order = async (
     address,
     phone,
     cart_item) => {
-    return await POST('/login', {
+    return await POST('/order', {
         address,
         phone,
         cart_item
